@@ -56,6 +56,7 @@ func EmailFromFile(path string) (*Email, error) {
 		fmt.Println("El encabezado From está vacío o no existe")
 	}
 
+	//Existen elementos que carecen de destinatario
 	toHeader := msg.Header.Get("To")
 	if toHeader != "" {
 		addresses := extractEmailAddresses(toHeader)

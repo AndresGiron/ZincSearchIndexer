@@ -1,11 +1,13 @@
 <template>
   <div
     class='flex flex-col min-h-screen items-center justify-center min-h-screen from-purple-200 via-purple-300 to-purple-500 bg-gradient-to-br'>
-    <h1 class="text-white text-5xl font-bold mb-4">ZINC MAILS</h1>
+    <h1 class="text-white text-5xl font-bold mb-4">ZINC MAILS
+      <font-awesome-icon icon="envelope" class="mr-2" />
+    </h1>
 
 
 
-    <div class="w-4/5 flex mx-10 rounded bg-white mb-4">
+    <div v-if="!selectedMail" class="w-4/5 flex mx-10 rounded bg-white mb-4">
       <input class="w-full border-none bg-transparent px-4 py-1 text-gray-400 outline-none focus:outline-none"
         type="search" name="search" placeholder="Search..." v-model="searchQuery" />
       <button type="submit" class="m-2 rounded bg-purple-300 px-4 py-2 text-white" @click="search">
@@ -20,7 +22,7 @@
 
     <div class="w-4/5 grid grid-cols-12 gap-4">
 
-      <div class="w-5/5 overflow-x-auto relative sm:rounded-lg col-span-8">
+      <div v-if="!selectedMail" class="w-5/5 overflow-x-auto relative sm:rounded-lg col-span-12">
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -41,7 +43,7 @@
       </div>
 
       <div v-if="selectedMail"
-        class="w-5/5 overflow-x-auto relative sm:rounded-lg col-span-4 disabled:shadow-none">
+        class="w-5/5 overflow-x-auto relative sm:rounded-lg col-span-12 disabled:shadow-none ">
 
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -59,12 +61,12 @@
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <td scope="col" class="py-3 px-6">
-                <h2>From: {{ selectedMail.from }} <br> To: {{ selectedMail.to }}</h2>
+                <h2> <b>From:</b> {{ selectedMail.from }} <br> <b>To:</b> {{ selectedMail.to }}</h2>
               </td>
               <td scope="col" class="py-3 px-6"></td>
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td scope="col" class="py-3 px-6"> {{ selectedMail.body }}</td>
+              <td scope="col" class="py-3 px-6" style="max-height: 600px;"> {{ selectedMail.body }}</td>
               <td></td>
             </tr>
           </tbody>
@@ -72,7 +74,7 @@
 
         <div class="flex justify-center mt-4">
           <button @click="closeModal"
-            class="middle none center rounded-lg bg-purple-200 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            class="middle none center rounded-lg bg-purple-500 py-3 px-6 font-sans text-xs font-bold uppercase text-white shadow-md shadow-pink-500/20 transition-all hover:shadow-lg hover:shadow-pink-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
             data-ripple-light="true">
             Cerrar
           </button>
@@ -84,10 +86,15 @@
 
     </div>
 
-    <div class="flex justify-center mt-4" center>
-      <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-l" @click="prevPage">Prev</button>
+    <div v-if="!selectedMail" class="flex justify-center mt-4" center>
+      <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-l"
+      :class="{ 'bg-gray-100 text-gray-600 cursor-not-allowed': currentPage === 0 }"
+      :disabled="currentPage === 0" 
+      @click="prevPage">Prev</button>
       <span class="bg-gray-200 text-gray-700 py-2 px-4">{{ currentPage + 1 }}</span>
-      <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-r" @click="nextPage">Next</button>
+      <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-r"
+      :class="{ 'bg-gray-100 text-gray-600 cursor-not-allowed':  emails.length < pageSize }"  
+      @click="nextPage">Next</button>
     </div>
 
   </div>
@@ -95,9 +102,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faEnvelope);
 
 
 export default defineComponent({
+  components:{
+    FontAwesomeIcon
+  },
   data() {
     return {
       emails: [],
@@ -106,10 +121,6 @@ export default defineComponent({
       pageSize: 10,
       flagSearch: false,
       selectedMail: null,
-      from: "este",
-      to: ["esta"],
-      subject: "compae",
-      body: "hombe ta vaina ta fina cole, ando probando la vainita para visualizar el content de los correos y aja"
     };
   },
   methods: {
@@ -166,6 +177,7 @@ export default defineComponent({
           const data = await response.json();
           console.log(data)
           this.emails = data.hits.hits;
+          console.log(this.emails.length, "cantidad de correos")
 
 
         } catch (error) {
@@ -174,11 +186,16 @@ export default defineComponent({
       }
     },
     nextPage() {
-      this.currentPage++;
       if (this.searchQuery === '') {
-        this.fetchData();
+        if (this.pageSize <= this.emails.length){
+          this.currentPage++;
+          this.fetchData();
+        }
       } else {
-        this.search();
+        if (this.pageSize <= this.emails.length){
+          this.currentPage++;
+          this.search();
+        }
       }
     },
     prevPage() {
@@ -207,4 +224,17 @@ export default defineComponent({
 });
 </script>
 
-<style scoped></style>
+
+<style scoped>
+
+  .selected-mail-container {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
+  .selected-mail-container {
+    max-height: 200px; /* Ajusta la altura según tus necesidades */
+    overflow-y: auto;
+  }
+
+</style>
