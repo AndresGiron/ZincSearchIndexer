@@ -15,17 +15,6 @@ type MyServer struct {
 	server *http.Server
 }
 
-type QuerySearch struct {
-	Term      string `json:"term"`
-	From      string `json:"from"`
-	MaxResult string `json:"max_results"`
-}
-
-type QueryAll struct {
-	From      string `json:"from"`
-	MaxResult string `json:"max_results"`
-}
-
 func NewServer(mux *chi.Mux) *MyServer {
 	s := &http.Server{
 		Addr:           ":9000",

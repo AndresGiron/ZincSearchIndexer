@@ -38,6 +38,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
 	bodyJson, err := json.Marshal(body.Term)
 	if err != nil {
 		log.Fatal(err)
@@ -48,7 +49,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		"search_type": "querystring",
         "query":
         {
-            "term": ` + string(bodyJson) + `
+            "term": ` + string(body.Term) + `
         },
         "from": ` + string(body.From) + `,
         "max_results": ` + string(body.MaxResult) + `,
