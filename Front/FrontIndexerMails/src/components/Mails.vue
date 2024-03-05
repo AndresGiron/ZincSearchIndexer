@@ -152,6 +152,7 @@ export default defineComponent({
       }
     },
     async search() {
+      console.log(this.searchQuery)
       if (this.searchQuery === '') {
         this.currentPage = 0;
         this.fetchData()

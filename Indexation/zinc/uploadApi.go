@@ -49,7 +49,7 @@ func PushMailsQuickAP() {
 
 	//fmt.Println(len(files))
 
-	blockOfMails := (len(files) + Workers - 1) / Workers
+	blockOfMails := (len(files)) / Workers
 	//fmt.Println(blockOfMails)
 	Blocks := make([][]string, 0)
 
