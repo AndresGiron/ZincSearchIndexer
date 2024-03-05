@@ -49,7 +49,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		"search_type": "querystring",
         "query":
         {
-            "term": ` + string(body.Term) + `
+            "term": ` + string(bodyJson) + `
         },
         "from": ` + string(body.From) + `,
         "max_results": ` + string(body.MaxResult) + `,
