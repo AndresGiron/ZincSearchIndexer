@@ -12,7 +12,7 @@ func main() {
 	// Subir los correos a zinc search
 	//zinc.PushMails()
 	//zinc.PushMailsQuick()
-	zinc.PushMailsQuickAP()
+	//zinc.PushMailsQuickAP()
 	//Encender el API Rest
 	mux := server.Routes()
 	server := server.NewServer(mux)

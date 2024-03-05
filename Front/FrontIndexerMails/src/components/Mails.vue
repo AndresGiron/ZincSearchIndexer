@@ -88,12 +88,12 @@
 
     <div v-if="!selectedMail" class="flex justify-center mt-4" center>
       <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-l"
-      :class="{ 'bg-gray-100 text-gray-600 cursor-not-allowed': currentPage === 0 }"
+      :class="{ 'bg-gray-600 text-gray-600 cursor-not-allowed': currentPage === 0 }"
       :disabled="currentPage === 0" 
       @click="prevPage">Prev</button>
       <span class="bg-gray-200 text-gray-700 py-2 px-4">{{ currentPage + 1 }}</span>
       <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-r"
-      :class="{ 'bg-gray-100 text-gray-600 cursor-not-allowed':  emails.length < pageSize }"  
+      :class="{ 'bg-gray-600 text-gray-600 cursor-not-allowed':  emails.length < pageSize }"  
       @click="nextPage">Next</button>
     </div>
 
