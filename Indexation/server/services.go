@@ -9,6 +9,17 @@ import (
 	"strings"
 )
 
+type QuerySearch struct {
+	Term      string `json:"term"`
+	From      string `json:"from"`
+	MaxResult string `json:"max_results"`
+}
+
+type QueryAll struct {
+	From      string `json:"from"`
+	MaxResult string `json:"max_results"`
+}
+
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Access-Control-Allow-Origin", "*")
