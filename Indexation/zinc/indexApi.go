@@ -7,12 +7,6 @@ import (
 	"net/http"
 )
 
-func ExecuteAll() {
-	// CheckIndex()
-	CreateIndex()
-
-}
-
 const user = "admin"
 const password = "Complexpass#123"
 const indexPath = "http://localhost:4080/api/index/"
