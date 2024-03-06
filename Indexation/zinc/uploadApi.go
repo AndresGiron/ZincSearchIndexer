@@ -234,10 +234,13 @@ type BulkEmails struct {
 func UploadEmailsBulk(emailsBlock []string) error {
 	parsedEmailsAndConvertedEmails := make([]*parser.Email, 0)
 	for _, emailPath := range emailsBlock {
-		emailObj, _ := parser.EmailFromFile(emailPath)
+		emailObj, err := parser.EmailFromFile(emailPath)
 		// jsonBytes, _ := json.Marshal(emailObj)
 		// fmt.Println(string(jsonBytes))
-		parsedEmailsAndConvertedEmails = append(parsedEmailsAndConvertedEmails, emailObj)
+		if err == nil {
+			parsedEmailsAndConvertedEmails = append(parsedEmailsAndConvertedEmails, emailObj)
+		}
+
 	}
 
 	//fmt.Println(len(parsedEmailsAndConvertedEmails))

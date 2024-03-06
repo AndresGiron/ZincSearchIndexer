@@ -36,14 +36,17 @@
               :key="index" @click="showSelectedMail(email)">
               <td class="py-4 px-6">{{ email._source.subject }}</td>
               <td class="py-4 px-6">{{ email._source.from }}</td>
-              <td class="py-4 px-6">{{ email._source.to }}</td>
+              <td class="py-4 px-6">
+                <div class="email-to-cell" style="max-height: 50px; overflow-y: auto;">
+                  {{ email._source.to }}
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div v-if="selectedMail"
-        class="w-5/5 overflow-x-auto relative sm:rounded-lg col-span-12 disabled:shadow-none ">
+      <div v-if="selectedMail" class="w-5/5 overflow-x-auto relative sm:rounded-lg col-span-12 disabled:shadow-none ">
 
         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -61,12 +64,18 @@
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <td scope="col" class="py-3 px-6">
-                <h2> <b>From:</b> {{ selectedMail.from }} <br> <b>To:</b> {{ selectedMail.to }}</h2>
+                <div class="email-to-cell" style="max-height: 100px; overflow-y: auto;">
+                  <h2> <b>From:</b> {{ selectedMail.from }} <br> <b>To:</b> {{ selectedMail.to }}</h2>
+                </div>
               </td>
               <td scope="col" class="py-3 px-6"></td>
             </tr>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-              <td scope="col" class="py-3 px-6" style="max-height: 600px;"> {{ selectedMail.body }}</td>
+              <div class="email-body-cell justify-center" style="max-height: 60vh; overflow-y: auto;">
+                <td scope="col" class="py-3 px-6">
+                  {{ selectedMail.body }}
+                </td>
+              </div>
               <td></td>
             </tr>
           </tbody>
@@ -88,13 +97,12 @@
 
     <div v-if="!selectedMail" class="flex justify-center mt-4" center>
       <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-l"
-      :class="{ 'bg-gray-600 text-gray-600 cursor-not-allowed': currentPage === 0 }"
-      :disabled="currentPage === 0" 
-      @click="prevPage">Prev</button>
+        :class="{ 'bg-gray-600 text-gray-600 cursor-not-allowed': currentPage === 0 }" :disabled="currentPage === 0"
+        @click="prevPage">Prev</button>
       <span class="bg-gray-200 text-gray-700 py-2 px-4">{{ currentPage + 1 }}</span>
       <button class="bg-purple-500 text-white font-bold py-2 px-4 rounded-r"
-      :class="{ 'bg-gray-600 text-gray-600 cursor-not-allowed':  emails.length < pageSize }"  
-      @click="nextPage">Next</button>
+        :class="{ 'bg-gray-600 text-gray-600 cursor-not-allowed': emails.length < pageSize }"
+        @click="nextPage">Next</button>
     </div>
 
   </div>
@@ -110,7 +118,7 @@ library.add(faEnvelope);
 
 
 export default defineComponent({
-  components:{
+  components: {
     FontAwesomeIcon
   },
   data() {
@@ -188,12 +196,12 @@ export default defineComponent({
     },
     nextPage() {
       if (this.searchQuery === '') {
-        if (this.pageSize <= this.emails.length){
+        if (this.pageSize <= this.emails.length) {
           this.currentPage++;
           this.fetchData();
         }
       } else {
-        if (this.pageSize <= this.emails.length){
+        if (this.pageSize <= this.emails.length) {
           this.currentPage++;
           this.search();
         }
@@ -227,15 +235,9 @@ export default defineComponent({
 
 
 <style scoped>
-
-  .selected-mail-container {
-    max-height: 600px;
-    overflow-y: auto;
-  }
-
-  .selected-mail-container {
-    max-height: 200px; /* Ajusta la altura según tus necesidades */
-    overflow-y: auto;
-  }
-
+.email-to-cell {
+  max-height: 30px;
+  /* Ajusta la altura según tus necesidades */
+  overflow-y: auto;
+}
 </style>
