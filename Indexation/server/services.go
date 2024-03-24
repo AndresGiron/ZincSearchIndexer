@@ -97,7 +97,6 @@ func ListAll(w http.ResponseWriter, r *http.Request) {
         "search_type": "alldocuments",
         "from": ` + string(body.From) + `,
         "max_results":` + string(body.MaxResult) + ` ,
-		"sort_fields": [],
         "_source": []
     }`
 	fmt.Println(strings.NewReader(query))
