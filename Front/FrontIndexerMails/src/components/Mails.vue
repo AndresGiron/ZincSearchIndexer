@@ -35,14 +35,14 @@
           <tbody>
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700" v-for="(email, index) in emails"
               :key="index" @click="showSelectedMail(email)">
-              <td class="py-4 px-6">{{ email._source.subject }}</td>
-              <td class="py-4 px-6">{{ email._source.from }}</td>
+              <td class="py-4 px-6">{{ email.subject }}</td>
+              <td class="py-4 px-6">{{ email.from }}</td>
               <td class="py-4 px-6">
                 <div class="email-to-cell" style="max-height: 50px; overflow-y: auto;">
-                  {{ email._source.to }}
+                  {{ email.to }}
                 </div>
               </td>
-              <td class="py-4 px-6">{{ new Date(email._source.date).toDateString()}}</td>
+              <td class="py-4 px-6">{{ new Date(email.date).toDateString()}}</td>
             </tr>
           </tbody>
         </table>
@@ -120,6 +120,13 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 library.add(faEnvelope);
 
+interface Email {
+  subject: string;
+  from: string;
+  to: string;
+  date: string;
+  body: string; // Asumiendo que el cuerpo del correo es una cadena de texto
+}
 
 export default defineComponent({
   components: {
@@ -127,12 +134,13 @@ export default defineComponent({
   },
   data() {
     return {
-      emails: [],
+      emails: [] as Email[],
+      // emails:[{}],
       searchQuery: '',
       currentPage: 0,
       pageSize: 10,
       flagSearch: false,
-      selectedMail: null,
+      selectedMail: null as Email | null,
     };
   },
   methods: {
@@ -157,7 +165,20 @@ export default defineComponent({
 
         const data = await response.json();
         console.log(data.hits.hits)
-        this.emails = data.hits.hits;
+
+        const tempEmails = [] as Email[]
+        data.hits.hits.map((source:any) => {
+          var mail = {
+            subject: source._source.subject,
+            from: source._source.from,
+            to: source._source.to,
+            date: source._source.date,
+            body: source._source.body
+          }
+          tempEmails.push(mail)
+        })
+
+        this.emails = tempEmails
         console.log(this.emails, "correos guardados en la variable emails")
       } catch (error) {
         console.error('Error:', error);
@@ -190,8 +211,19 @@ export default defineComponent({
           const data = await response.json();
           console.log(data)
 
-          this.emails = data.hits.hits;
-        
+          const tempEmails = [] as Email[]
+          data.hits.hits.map((source: any) => {
+            var mail = {
+              subject: source._source.subject,
+              from: source._source.from,
+              to: source._source.to,
+              date: source._source.date,
+              body: source._source.body
+            }
+            tempEmails.push(mail)
+          })
+
+        this.emails = tempEmails
 
           console.log(this.emails.length, "cantidad de correos")
 
@@ -227,8 +259,8 @@ export default defineComponent({
         }
       }
     },
-    showSelectedMail(email) {
-      this.selectedMail = email._source
+    showSelectedMail(email:Email) {
+      this.selectedMail = email
     },
     closeModal() {
       this.selectedMail = null
