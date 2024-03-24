@@ -53,7 +53,6 @@ func Search(w http.ResponseWriter, r *http.Request) {
         },
         "from": ` + string(body.From) + `,
         "max_results": ` + string(body.MaxResult) + `,
-		"sort_fields": ["date"],
         "_source": []
     }`
 	fmt.Println(strings.NewReader(query))
