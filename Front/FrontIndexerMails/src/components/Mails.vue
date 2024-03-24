@@ -29,6 +29,7 @@
               <th scope="col" class="py-3 px-6">Subject</th>
               <th scope="col" class="py-3 px-6">From</th>
               <th scope="col" class="py-3 px-6">To</th>
+              <th scope="col" class="py-3 px-6">Date</th>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +42,7 @@
                   {{ email._source.to }}
                 </div>
               </td>
+              <td class="py-4 px-6">{{ new Date(email._source.date).toDateString()}}</td>
             </tr>
           </tbody>
         </table>
@@ -53,6 +55,8 @@
             <tr>
               <th scope="col" class="py-3 px-6">
                 <h3>Subject: {{ selectedMail.subject }}</h3>
+                <br/>
+                <h1>Date: {{new Date(selectedMail.date).toDateString()}}</h1>
               </th>
               <th>
               </th>
@@ -73,7 +77,7 @@
             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
               <div class="email-body-cell justify-center" style="max-height: 60vh; overflow-y: auto;">
                 <td scope="col" class="py-3 px-6">
-                  {{ selectedMail.body }}
+                  <pre>{{ selectedMail.body.trim()}}</pre>
                 </td>
               </div>
               <td></td>
@@ -185,7 +189,10 @@ export default defineComponent({
 
           const data = await response.json();
           console.log(data)
+
           this.emails = data.hits.hits;
+        
+
           console.log(this.emails.length, "cantidad de correos")
 
 

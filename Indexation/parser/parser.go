@@ -50,7 +50,7 @@ func EmailFromFile(path string) (*Email, error) {
 			emailObj.From = addres[0]
 		} else {
 			emailObj.From = ""
-			fmt.Println("Este from esta vacio")
+			//fmt.Println("Este from esta vacio")
 		}
 	} else {
 		fmt.Println("El encabezado From está vacío o no existe")
@@ -73,5 +73,6 @@ func EmailFromFile(path string) (*Email, error) {
 // Expresion regular para correos de todos los formatos
 func extractEmailAddresses(header string) []string {
 	re := regexp.MustCompile(`[\w.-]+@[\w.-]+\.\w+`)
+	//
 	return re.FindAllString(header, -1)
 }

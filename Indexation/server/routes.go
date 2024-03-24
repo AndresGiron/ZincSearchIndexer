@@ -13,7 +13,6 @@ func corsHandler(next http.Handler) http.Handler {
 		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
 		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 
-		// Permitir solicitudes preflight OPTIONS
 		if r.Method == "OPTIONS" {
 			w.WriteHeader(http.StatusOK)
 			return

@@ -128,7 +128,7 @@ func PushMailsQuick() {
 		go func() {
 			defer wg.Done()
 			for file := range fileChan {
-				err := processFile(file)
+				err := UploadEmails(file)
 				if err != nil {
 					log.Printf("Error al procesar el archivo %s: %v", file, err)
 				}
@@ -171,7 +171,7 @@ func PushMails() {
 
 	for i := 0; i < len(files); i++ {
 		fmt.Println(i)
-		err := processFile(files[i])
+		err := UploadEmails(files[i])
 		if err != nil {
 			log.Printf("Error al procesar el archivo %s: %v", files[0], err)
 		}
@@ -199,7 +199,13 @@ func PushMails() {
 
 }
 
-func UploadEmails(email *parser.Email) error {
+func UploadEmails(filePath string) error {
+
+	email, err := parser.EmailFromFile(filePath)
+	if err != nil {
+		return fmt.Errorf("error al leer el archivo de correo %s: %v", filePath, err)
+	}
+
 	jsonBytes, err := json.Marshal(&email)
 	if err != nil {
 		return err
@@ -295,20 +301,20 @@ func getAllFiles(dirPath string) ([]string, error) {
 	return files, nil
 }
 
-func processFile(filePath string) error {
-	// Parsear los documentos
-	emailObj, err := parser.EmailFromFile(filePath)
-	if err != nil {
-		return fmt.Errorf("error al leer el archivo de correo %s: %v", filePath, err)
-	}
+// func processFile(filePath string) error {
+// 	// Parsear los documentos
+// 	emailObj, err := parser.EmailFromFile(filePath)
+// 	if err != nil {
+// 		return fmt.Errorf("error al leer el archivo de correo %s: %v", filePath, err)
+// 	}
 
-	// Sube el correo electrónico
-	err = UploadEmails(emailObj)
-	if err != nil {
-		return fmt.Errorf("error al subir el correo electrónico %s: %v", emailObj.MessageId, err)
-	}
+// 	// Sube el correo electrónico
+// 	err = UploadEmails(emailObj)
+// 	if err != nil {
+// 		return fmt.Errorf("error al subir el correo electrónico %s: %v", emailObj.MessageId, err)
+// 	}
 
-	//fmt.Printf("%s\n", emailObj.MessageId)
+// 	//fmt.Printf("%s\n", emailObj.MessageId)
 
-	return nil
-}
+// 	return nil
+// }
