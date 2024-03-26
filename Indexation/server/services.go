@@ -51,6 +51,7 @@ func Search(w http.ResponseWriter, r *http.Request) {
         {
             "term": ` + string(bodyJson) + `
         },
+		"sort_fields":["-date"],
         "from": ` + string(body.From) + `,
         "max_results": ` + string(body.MaxResult) + `,
         "_source": []
@@ -96,6 +97,7 @@ func ListAll(w http.ResponseWriter, r *http.Request) {
         "search_type": "alldocuments",
         "from": ` + string(body.From) + `,
         "max_results":` + string(body.MaxResult) + ` ,
+		"sort_fields":["-date"],
         "_source": []
     }`
 	fmt.Println(strings.NewReader(query))

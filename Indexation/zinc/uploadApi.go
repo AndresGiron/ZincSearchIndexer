@@ -128,10 +128,7 @@ func PushMailsQuick() {
 		go func() {
 			defer wg.Done()
 			for file := range fileChan {
-				err := UploadEmails(file)
-				if err != nil {
-					log.Printf("Error al procesar el archivo %s: %v", file, err)
-				}
+				UploadEmails(file)
 			}
 		}()
 	}
